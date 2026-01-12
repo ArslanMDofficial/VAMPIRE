@@ -43,7 +43,7 @@ setInterval(() => {
     }
 }, 30_000) // check every 30 seconds
 
-let phoneNumber = "911234567890"
+let phoneNumber = "923237045918"
 let owner = JSON.parse(fs.readFileSync('./data/owner.json'))
 const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
@@ -63,7 +63,7 @@ async function downloadSessionData() {
                 return false;
             }
 
-            const base64Data = global.SESSION_ID.split("dave~")[1];
+            const base64Data = global.SESSION_ID.split("ARSLAN-MD~")[1];
             if (!base64Data) {
                 console.log(color('Invalid SESSION_ID format', 'red'));
                 return false;
