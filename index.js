@@ -54,32 +54,32 @@ const sessionDir = path.join(__dirname, 'session');
 const credsPath = path.join(sessionDir, 'creds.json');
 
 async function downloadSessionData() {
-    try {
-        if (!global.SESSION_ID) {
-            console.log(chalk.yellow('[⚠️] No SESSION_ID - Will use QR/Pairing'));
+    if (!global.SESSION_ID) {
+        console.log(chalk.yellow('[⚠️] No SESSION_ID - Will use QR/Pairing'));
+        return null;
+    }
+
+    console.log(chalk.cyan('[🔰] Processing SESSION_ID...'));
+
+    if (global.SESSION_ID.includes('ARSLAN-MD~')) {
+        let base64Data = global.SESSION_ID.split('ARSLAN-MD~')[1];
+        base64Data = base64Data.trim().replace(/\s+/g, ''); // remove extra spaces/newlines
+
+        try {
+            const sessionData = Buffer.from(base64Data, 'base64');
+            fs.mkdirSync('./session', { recursive: true });
+            fs.writeFileSync('./session/creds.json', sessionData);
+            console.log(chalk.green('[✅] ARSLAN-MD session saved!'));
+            return JSON.parse(sessionData.toString());
+        } catch (err) {
+            console.log(chalk.red('[❌] ARSLAN-MD parse error: ', err.message));
             return null;
         }
+    }
 
-        console.log(chalk.cyan('[🔰] Processing SESSION_ID...'));
-
-        // ✅ ARSLAN-MD FORMAT
-        if (global.SESSION_ID.includes('ARSLAN-MD~')) {
-            console.log(chalk.cyan('[🔰] Detected ARSLAN-MD~ format session'));
-            const base64Data = global.SESSION_ID.split("ARSLAN-MD~")[1];
-            if (!base64Data) {
-                console.log(chalk.red('[❌] Invalid ARSLAN-MD format'));
-                return null;
-            }
-            try {
-                const sessionData = Buffer.from(base64Data, 'base64');
-                fs.writeFileSync(credsPath, sessionData);
-                console.log(chalk.green('[✅] ARSLAN-MD session saved!'));
-                return JSON.parse(sessionData.toString());
-            } catch (e) {
-                console.log(chalk.red(`[❌] ARSLAN-MD parse error: ${e.message}`));
-                return null;
-            }
-        }
+    console.log(chalk.yellow('[⚠️] Unknown SESSION_ID format'));
+    return null;
+}
         // ✅ PLAIN BASE64 FORMAT
         else if (global.SESSION_ID.length > 100 && !global.SESSION_ID.includes('http')) {
             console.log(chalk.cyan('[🔰] Detected direct base64 session'));
