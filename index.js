@@ -80,7 +80,6 @@ async function downloadSessionData() {
     console.log(chalk.yellow('[⚠️] Unknown SESSION_ID format'));
     return null;
       }
-}
 
 async function startconn() {
     let { version } = await fetchLatestBaileysVersion()
