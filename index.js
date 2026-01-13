@@ -7,6 +7,7 @@ const pino = require('pino');
 const { Boom } = require('@hapi/boom');
 const yargs = require('yargs/yargs');
 const fs = require('fs');
+const require = ('./settings');
 const chalk = require('chalk');
 const path = require('path');
 const axios = require('axios');
